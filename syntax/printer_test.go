@@ -392,9 +392,12 @@ func TestFprintWeirdFormat(t *testing.T) {
 		},
 	}
 
+	n := 0
 	for i, tc := range weirdFormats {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
 			check := func(in, want string) {
+				ioutil.WriteFile(fmt.Sprintf("../corpus/printer-%03d", n), []byte(in), 0644)
+				n++
 				prog, err := Parse([]byte(in), "", ParseComments)
 				checkNewlines(t, in, prog.Lines)
 				if err != nil {

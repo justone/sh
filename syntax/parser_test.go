@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"reflect"
@@ -30,7 +31,12 @@ func TestParseComments(t *testing.T) {
 
 func TestParseBash(t *testing.T) {
 	t.Parallel()
+	n := 1
 	for i, c := range append(fileTests, fileTestsNoPrint...) {
+		for _, in := range c.Strs {
+			ioutil.WriteFile(fmt.Sprintf("../corpus/parser-%03d", n), []byte(in), 0644)
+			n++
+		}
 		want := c.Bash
 		if want == nil {
 			continue
